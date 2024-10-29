@@ -11,7 +11,16 @@ export default function SideNav() {
   return (
     <nav className="px-[20px] py-[15px] text-[#fff] h-[100vh] bg-blue-700">
       <div className="flex flex-col gap-3">
-        <h3 className="text-xl">Side Navbar</h3>
+        <h3 className="ml-2 text-xl">Side Navbar</h3>
+        
+         <Link
+          to="/movies"
+          className={`w-[210px] ${linkClassNames('/movies')}`}
+          onClick={() => setActiveLink('/movies')}
+        >
+          Movies
+        </Link>
+
         <Link
           to="/category"
           className={`w-[210px] ${linkClassNames('/category')}`}
@@ -19,13 +28,7 @@ export default function SideNav() {
         >
           Category
         </Link>
-        <Link
-          to="/movies"
-          className={`w-[210px] ${linkClassNames('/movies')}`}
-          onClick={() => setActiveLink('/movies')}
-        >
-          Movies
-        </Link>
+       
         <Link
           to="/bookings"
           className={`w-[210px] ${linkClassNames('/bookings')}`}
@@ -42,7 +45,7 @@ export default function SideNav() {
         </Link>
       </div>
       <button
-        className="w-[15vw] ml-2 mt-5 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+        className="w-[15vw] ml-2 mt-5 bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition-all duration-300 ease-in-out"
         type="button"
       >
         Logout
