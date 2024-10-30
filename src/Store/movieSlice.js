@@ -1,11 +1,11 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const path = import.meta.env.VITE_APP_API + "/categories/";
+const path = import.meta.env.VITE_APP_API + "/movies/";
 
 // Thunks
-export const fetchCategories = createAsyncThunk(
-  "categories/fetchCategories",
+export const fetchMovies = createAsyncThunk(
+  "movies/fetchMovies",
   async (_, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("token");
@@ -21,14 +21,38 @@ export const fetchCategories = createAsyncThunk(
   }
 );
 
-export const addCategory = createAsyncThunk(
-  "categories/addCategory",
-  async (name, { rejectWithValue }) => {
+export const addMovie = createAsyncThunk(
+  "movies/addMovie",
+  async (movieData, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("token");
+
       const response = await axios.post(
         path,
-        { name },
+        movieData,
+        {
+          headers: {
+            "Authorization": `Bearer ${token}`,
+          },
+        }
+      );
+      
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+
+export const updateMovie = createAsyncThunk(
+  "movies/updateMovie",
+  async ({ id, data }, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.put(
+        path + id,
+        data,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -42,25 +66,8 @@ export const addCategory = createAsyncThunk(
   }
 );
 
-export const updateCategory = createAsyncThunk(
-  "categories/updateCategory",
-  async ({ id, data }, { rejectWithValue }) => {
-    try {
-      const token = localStorage.getItem("token");
-      const response = await axios.put(path + id, data, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      return response.data;
-    } catch (error) {
-      return rejectWithValue(error.message);
-    }
-  }
-);
-
-export const deleteCategory = createAsyncThunk(
-  "categories/deleteCategory",
+export const deleteMovie = createAsyncThunk(
+  "movies/deleteMovie",
   async (id, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("token");
@@ -76,8 +83,8 @@ export const deleteCategory = createAsyncThunk(
   }
 );
 
-const categorySlice = createSlice({
-  name: "categories",
+const moviesSlice = createSlice({
+  name: "movies",
   initialState: {
     items: [],
     status: "idle",
@@ -88,46 +95,34 @@ const categorySlice = createSlice({
 
   extraReducers: (builder) => {
     builder
-      .addCase(fetchCategories.pending, (state) => {
+      .addCase(fetchMovies.pending, (state) => {
         state.status = "loading";
       })
-      .addCase(fetchCategories.fulfilled, (state, action) => {
+      .addCase(fetchMovies.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.items = action.payload;
       })
-      .addCase(fetchCategories.rejected, (state, action) => {
+      .addCase(fetchMovies.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload;
       })
-      .addCase(addCategory.fulfilled, (state, action) => {
+      .addCase(addMovie.fulfilled, (state, action) => {
         state.items.push(action.payload);
       })
-      .addCase(updateCategory.fulfilled, (state, action) => {
-        const updatedCategory = action.payload;
+      .addCase(updateMovie.fulfilled, (state, action) => {
         const index = state.items.findIndex(
-          (category) => category.id === updatedCategory.id
+          (movie) => movie.id === action.payload.id
         );
-
         if (index !== -1) {
-          // Update the category
-          state.items[index] = updatedCategory;
-
-          // Ensure only one category has isHeroSection set to true
-          if (updatedCategory.isHeroSection) {
-            state.items = state.items.map((category, idx) =>
-              idx !== index
-                ? { ...category, isHeroSection: false }
-                : category
-            );
-          }
+          state.items[index] = action.payload;
         }
       })
-      .addCase(deleteCategory.fulfilled, (state, action) => {
+      .addCase(deleteMovie.fulfilled, (state, action) => {
         state.items = state.items.filter(
-          (category) => category.id !== action.payload
+          (movie) => movie.id !== action.payload
         );
       });
   },
 });
 
-export default categorySlice.reducer;
+export default moviesSlice.reducer;

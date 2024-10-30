@@ -9,7 +9,7 @@ export default function Layout() {
     return (
         <div>
             {<SideNav />}
-            <main className="absolute top-4 right-4 rounded-lg h-[95vh] w-[80vw] bg-white" >
+            <main className="absolute overflow-auto  p-6 top-4 right-4 rounded-lg h-[95vh] w-[80vw] bg-white" >
                 <Outlet />
             </main>
         </div>
