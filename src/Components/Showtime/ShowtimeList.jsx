@@ -51,8 +51,8 @@ export default function ShowtimeList() {
         {showtimes.map((showtime) => (
           <tr key={showtime.id}>
             <td className="py-2 px-4 border-b">{showtime.movieId}</td>
-            <td className="py-2 px-4 border-b">{showtime.time}</td>
-            <td className="py-2 px-4 border-b">{showtime.date}</td>
+            <td className="py-2 px-4 border-b">{new Date(showtime.dateTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</td>
+            <td className="py-2 px-4 border-b">{new Date(showtime.dateTime).toLocaleDateString()}</td>
             <td className="py-2 px-4 border-b">
               <button
                 className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded"

@@ -1,54 +1,51 @@
-import { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import  { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { addShowtime } from '../../Store/showtimeSlice';
+import { fetchMovies } from '../../Store/movieSlice'; // Ensure this import is correct
 
 export default function ShowtimeForm() {
   const [movieId, setMovieId] = useState('');
-  const [time, setTime] = useState('');
-  const [date, setDate] = useState('');
+  const [dateTime, setDateTime] = useState('');
   const dispatch = useDispatch();
+  const movies = useSelector((state) => state.movies.items);
+
+  useEffect(() => {
+    dispatch(fetchMovies());
+  }, [dispatch]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(addShowtime({ movieId, time, date }));
+    dispatch(addShowtime({ movieId, dateTime: dateTime }));
     setMovieId('');
-    setTime('');
-    setDate('');
+    setDateTime('');
   };
 
   return (
     <form className="bg-white p-4 rounded-lg shadow-md mb-6" onSubmit={handleSubmit}>
       <h3 className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">Add New Showtime</h3>
       <div className="mb-4">
-        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="movieId">Movie ID</label>
-        <input
+        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="movieId">Movie</label>
+        <select
           className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           id="movieId"
-          type="text"
           value={movieId}
           onChange={(e) => setMovieId(e.target.value)}
           required
-        />
+        >
+          <option value="">Select a movie</option>
+          {movies.map(movie => (
+            <option key={movie.id} value={movie.id}>{movie.name}</option>
+          ))}
+        </select>
       </div>
       <div className="mb-4">
-        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="time">Time</label>
+        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="dateTime">Date & Time</label>
         <input
           className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          id="time"
-          type="text"
-          value={time}
-          onChange={(e) => setTime(e.target.value)}
-          required
-        />
-      </div>
-      <div className="mb-4">
-        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="date">Date</label>
-        <input
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          id="date"
-          type="date"
-          value={date}
-          onChange={(e) => setDate(e.target.value)}
+          id="dateTime"
+          type="datetime-local"
+          value={dateTime}
+          onChange={(e) => setDateTime(e.target.value)}
           required
         />
       </div>
