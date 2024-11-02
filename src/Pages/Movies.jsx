@@ -23,7 +23,7 @@ export default function Movies() {
     setSelectedMovie(movie);
     setIsFormOpen(true);
   };
-  
+    
   const handleCloseForm = () => {
     setSelectedMovie(null);
     setIsFormOpen(false);

@@ -15,7 +15,7 @@ export default function ShowtimeForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(addShowtime({ movieId, dateTime: dateTime }));
+    dispatch(addShowtime({ movieId, dateTime }));
     setMovieId('');
     setDateTime('');
   };

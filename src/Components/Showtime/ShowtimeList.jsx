@@ -21,7 +21,7 @@ export default function ShowtimeList() {
     <table className="min-w-full bg-white">
       <thead>
         <tr>
-          <th className="py-2 px-4 border-b">Movie ID</th>
+          <th className="py-2 px-4 border-b">Movie Name</th>
           <th className="py-2 px-4 border-b">Time</th>
           <th className="py-2 px-4 border-b">Date</th>
           <th className="py-2 px-4 border-b">Actions</th>
@@ -50,7 +50,8 @@ export default function ShowtimeList() {
 
         {showtimes.map((showtime) => (
           <tr key={showtime.id}>
-            <td className="py-2 px-4 border-b">{showtime.movieId}</td>
+            {console.log(showtime)}
+            <td className="py-2 px-4 border-b">{showtime.movie?.name}</td>
             <td className="py-2 px-4 border-b">{new Date(showtime.dateTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</td>
             <td className="py-2 px-4 border-b">{new Date(showtime.dateTime).toLocaleDateString()}</td>
             <td className="py-2 px-4 border-b">

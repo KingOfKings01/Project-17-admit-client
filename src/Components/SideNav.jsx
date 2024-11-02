@@ -1,9 +1,19 @@
 import { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, Navigate, useLocation } from 'react-router-dom';
 
 export default function SideNav() {
   const location = useLocation();
   const [activeLink, setActiveLink] = useState(location.pathname);
+  const [isLogout, setIsLogout] = useState(false);
+
+  const logout = () => {
+    localStorage.removeItem('token');    
+    setIsLogout(true);
+  }
+
+  if(isLogout){
+    return <Navigate to="/login" />
+  }
 
   const linkClassNames = (path) =>
     `p-3 rounded-lg ${activeLink == path ? 'bg-white text-black w-[230px]' : 'text-white'} hover:bg-white hover:text-black  transition-all duration-300 ease-in-out`;
@@ -47,6 +57,7 @@ export default function SideNav() {
       <button
         className="w-[15vw] ml-2 mt-5 bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition-all duration-300 ease-in-out"
         type="button"
+        onClick={logout}
       >
         Logout
       </button>

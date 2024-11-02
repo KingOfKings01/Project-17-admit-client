@@ -50,7 +50,7 @@ export const updateMovie = createAsyncThunk(
   async ({ id, data }, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.put(
+      const response = await axios.patch(
         path + id,
         data,
         {
@@ -117,10 +117,18 @@ const moviesSlice = createSlice({
           state.items[index] = action.payload;
         }
       })
+      .addCase(deleteMovie.pending, (state) => {
+        state.status = "loading";
+      })
       .addCase(deleteMovie.fulfilled, (state, action) => {
         state.items = state.items.filter(
           (movie) => movie.id !== action.payload
         );
+      })
+      .addCase(deleteMovie.rejected, (state, action) => {
+        state.status = "failed";
+        state.message = "There must be showtime set for this movie!"
+        state.error = action.payload;
       });
   },
 });

@@ -17,3 +17,6 @@ ul{
   list-style: none;
 }
 
+.row-data {
+  @apply py-2 px-4 border-b whitespace-nowrap
+}

@@ -8,16 +8,26 @@ export default function MovieForm({ selectedMovie, onClose }) {
     const dispatch = useDispatch();
     const categories = useSelector((state) => state.categories.items);
 
+    function convertDate(datetimeStr) {
+        // Parse the datetime string into a Date object
+        const dateObj = new Date(datetimeStr);
+      
+        // Format the date as "yyyy-MM-dd"
+        const formattedDate = dateObj.toISOString().split('T')[0];
+      
+        return formattedDate;
+      }
+
     const [formData, setFormData] = useState({
-        name: selectedMovie ? selectedMovie.name : 'Hero',
-        genre: selectedMovie ? selectedMovie.genre : 'No genre selected',
-        description: selectedMovie ? selectedMovie.description : 'This is a test data',
-        poster: selectedMovie ? selectedMovie.poster : 'no poster available',
-        director: selectedMovie ? selectedMovie.director : 'AK',
-        releaseDate: selectedMovie ? selectedMovie.releaseDate : '',
-        language: selectedMovie ? selectedMovie.language : 'Hindi',
-        imdbRating: selectedMovie ? selectedMovie.imdbRating : '8',
-        trailerLink: selectedMovie ? selectedMovie.trailerLink : 'no link available',
+        name: selectedMovie ? selectedMovie.name : '',
+        genre: selectedMovie ? selectedMovie.genre : '',
+        description: selectedMovie ? selectedMovie.description : '',
+        poster: selectedMovie ? selectedMovie.poster : '',
+        director: selectedMovie ? selectedMovie.director : '',
+        releaseDate: selectedMovie ? convertDate(selectedMovie.releaseDate) : '',
+        language: selectedMovie ? selectedMovie.language : '',
+        imdbRating: selectedMovie ? selectedMovie.imdbRating : 0,
+        trailerLink: selectedMovie ? selectedMovie.trailerLink : '',
         categoryId: selectedMovie ? selectedMovie.categoryId : '',
     });
 
@@ -51,11 +61,14 @@ export default function MovieForm({ selectedMovie, onClose }) {
             data.append(key, formData[key]);
         }
         // Append the file separately
-        data.append('heroSectionImage', heroSectionImage);
+        if(heroSectionImage){
+            data.append('heroSectionImage', heroSectionImage || heroSectionPreview);
+        }
     
         try {
             if (selectedMovie) {
                 dispatch(updateMovie({ id: selectedMovie.id, data }));
+                // console.log(formData, heroSectionPreview, heroSectionImage);
                 alert("Movie Updated successfully!");
             } else {
                 dispatch(addMovie(data));
@@ -153,9 +166,12 @@ export default function MovieForm({ selectedMovie, onClose }) {
                         />
 
                         <input
-                            type="text"
+                            type="number"
                             placeholder="IMDb Rating"
                             name="imdbRating"
+                            min={0}
+                            max={10}
+                            step={0.1}
                             value={formData.imdbRating}
                             onChange={handleInputChange}
                             required
